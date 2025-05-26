@@ -39,20 +39,26 @@ export const toDate = (input: DateLike): Date => {
 };
 
 /**
- * 日付を 'yyyy/MM/dd' 形式でフォーマット
+ * 日付を 'yyyy/MM/dd' (JST)形式でフォーマット
  * @param input 日付入力
  * @returns フォーマット済み文字列
  */
-export const formatDate = (input: DateLike) =>
-  format(toDate(input), "yyyy/MM/dd");
+export const formatDateJST = (input: DateLike) => {
+  const date = toDate(input);
+  const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000); // UTC->JST
+  return format(jstDate, "yyyy/MM/dd");
+};
 
 /**
- * 日付を 'yyyy/MM/dd HH:mm' 形式でフォーマット
+ * 日付を 'yyyy/MM/dd HH:mm' (JST)形式でフォーマット
  * @param input 日付入力
  * @returns フォーマット済み文字列
  */
-export const formatDateTime = (input: DateLike) =>
-  format(toDate(input), "yyyy/MM/dd HH:mm");
+export const formatDateTimeJST = (input: DateLike) => {
+  const date = toDate(input);
+  const jstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000); // UTC->JST
+  return format(jstDate, "yyyy/MM/dd HH:mm");
+};
 
 /**
  * 2つの日付が同じ日か判定（時分秒は無視し日単位で比較）
