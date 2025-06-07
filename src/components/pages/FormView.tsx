@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -24,6 +24,14 @@ const AppRole = {
 
 type AppRoleType = (typeof AppRole)[keyof typeof AppRole];
 
+const TargetType = {
+  REGION: "region",
+  AREA: "area",
+  LOCATION: "location",
+} as const;
+
+type TargetType = (typeof TargetType)[keyof typeof TargetType];
+
 const UlidSchema = z
   .string()
   .regex(/^[0-9A-HJKMNP-TV-Z]{26}$/i, "無効なULIDです")
@@ -35,6 +43,9 @@ const schema = z.object({
   role: z.nativeEnum(AppRole), // ここで型安全にenum定義を利用
   locationId: z.string().optional(),
   locationIds: z.array(z.string()),
+
+  targetType: z.nativeEnum(TargetType),
+  targetId: z.string(),
 });
 
 // TypeScript用型
@@ -62,6 +73,8 @@ const FormView = () => {
       role: AppRole.ADMIN,
       locationId: "",
       locationIds: [],
+      targetType: TargetType.REGION,
+      targetId: "",
     },
   });
 
@@ -76,6 +89,28 @@ const FormView = () => {
       });
     }
   }, [reset, allLocations]);
+
+  const targetType = useWatch({ control, name: "targetType" });
+
+  // 対象ID一覧を動的に切り替える
+  const targetOptions = useMemo(() => {
+    if (targetType === TargetType.REGION) {
+      return regions.map((region) => ({ id: region.id, name: region.name }));
+    }
+    if (targetType === TargetType.AREA) {
+      return regions.flatMap((region) =>
+        region.areas.map((area) => ({ id: area.id, name: area.name }))
+      );
+    }
+    if (targetType === TargetType.LOCATION) {
+      return regions.flatMap((region) =>
+        region.areas.flatMap((area) =>
+          area.locations.map((loc) => ({ id: loc.id, name: loc.name }))
+        )
+      );
+    }
+    return [];
+  }, [targetType, regions]);
 
   const onSubmit = (data: FormData) => {
     const payload = {
@@ -198,6 +233,38 @@ const FormView = () => {
             )}
           />
           <FormHelperText>{errors.locationIds?.message}</FormHelperText>
+        </FormControl>
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel>対象タイプ</InputLabel>
+          <Controller
+            name="targetType"
+            control={control}
+            render={({ field }) => (
+              <Select {...field}>
+                <MenuItem value={TargetType.REGION}>リージョン</MenuItem>
+                <MenuItem value={TargetType.AREA}>エリア</MenuItem>
+                <MenuItem value={TargetType.LOCATION}>ロケーション</MenuItem>
+              </Select>
+            )}
+          />
+        </FormControl>
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel>対象ID</InputLabel>
+          <Controller
+            name="targetId"
+            control={control}
+            render={({ field }) => (
+              <Select {...field}>
+                {targetOptions.map((opt) => (
+                  <MenuItem key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
         </FormControl>
 
         <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>

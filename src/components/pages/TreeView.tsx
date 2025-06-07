@@ -41,8 +41,8 @@ const TreeViewPage: React.FC = () => {
           <TreeView
             expanded={expanded}
             selected={selectedNodeId}
-            onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
-            onNodeSelect={(event, nodeId) => {
+            onNodeToggle={(_event, nodeIds) => setExpanded(nodeIds)}
+            onNodeSelect={(_event, nodeId) => {
               setSelectedNodeId(nodeId);
 
               // Location判定
