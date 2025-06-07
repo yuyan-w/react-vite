@@ -80,26 +80,60 @@ const TreeViewPage: React.FC = () => {
         </Box>
 
         {/* 右カラム カスタマー一覧 */}
-        <Box sx={{ width: "65%", p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            顧客一覧
-          </Typography>
+        <Box
+          sx={{
+            width: "65%",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          {/* 1つ目の顧客一覧 */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              顧客一覧①
+            </Typography>
 
-          {selectedLocationId ? (
-            filteredCustomers.length > 0 ? (
-              <List>
-                {filteredCustomers.map((c) => (
-                  <ListItem key={c.id}>
-                    <ListItemText primary={c.name} />
-                  </ListItem>
-                ))}
-              </List>
+            {selectedLocationId ? (
+              filteredCustomers.length > 0 ? (
+                <List>
+                  {filteredCustomers.map((c) => (
+                    <ListItem key={`list1-${c.id}`}>
+                      <ListItemText primary={c.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Typography>顧客は登録されていません</Typography>
+              )
             ) : (
-              <Typography>顧客は登録されていません</Typography>
-            )
-          ) : (
-            <Typography>ロケーションを選択してください</Typography>
-          )}
+              <Typography>ロケーションを選択してください</Typography>
+            )}
+          </Box>
+
+          {/* 2つ目の顧客一覧 */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              顧客一覧②
+            </Typography>
+
+            {selectedLocationId ? (
+              filteredCustomers.length > 0 ? (
+                <List>
+                  {filteredCustomers.map((c) => (
+                    <ListItem key={`list2-${c.id}`}>
+                      <ListItemText primary={c.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Typography>顧客は登録されていません</Typography>
+              )
+            ) : (
+              <Typography>ロケーションを選択してください</Typography>
+            )}
+          </Box>
         </Box>
       </Box>
     </MockLayout>

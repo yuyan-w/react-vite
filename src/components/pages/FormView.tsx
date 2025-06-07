@@ -24,6 +24,11 @@ const AppRole = {
 
 type AppRoleType = (typeof AppRole)[keyof typeof AppRole];
 
+const UlidSchema = z
+  .string()
+  .regex(/^[0-9A-HJKMNP-TV-Z]{26}$/i, "無効なULIDです")
+  .or(z.literal("")); // 空文字許容
+
 // スキーマ定義
 const schema = z.object({
   name: z.string(),
