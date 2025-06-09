@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Select, MenuItem, CircularProgress, Box } from "@mui/material";
+import { Select, MenuItem, CircularProgress, Box, Button } from "@mui/material";
 
 const debugSleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -83,12 +83,12 @@ export default function ParentFormView() {
     fetchCities(selectedPrefecture)
       .then((data) => {
         setCities(data);
-        if (!data.includes(selectedCity)) {
+        if (!data.includes(watch("city"))) {
           setValue("city", "");
         }
       })
       .finally(() => setLoadingCities(false));
-  }, [selectedPrefecture, selectedCity, setValue]);
+  }, [selectedPrefecture, setValue, watch]);
 
   if (loadingPrefectures || loadingInitial) {
     return (
@@ -97,6 +97,15 @@ export default function ParentFormView() {
       </Box>
     );
   }
+
+  const handleClick = () => {
+    console.log("data:", {
+      selectedPrefecture,
+      selectedCity,
+      isPrefecture: !selectedPrefecture,
+      isCity: !selectedCity,
+    });
+  };
 
   return (
     <Box display="flex" flexDirection="column" gap={2} width={300}>
@@ -142,6 +151,7 @@ export default function ParentFormView() {
           </Select>
         )}
       />
+      <Button onClick={handleClick}>HERE</Button>
     </Box>
   );
 }
