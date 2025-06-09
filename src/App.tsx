@@ -4,6 +4,7 @@ import theme from "./theme";
 
 import TreeViewPage from "./components/pages/TreeView";
 import FormView from "./components/pages/FormView";
+import ParentFormView from "./components/pages/ParentFormView";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/tree" element={<TreeViewPage />} />
           <Route path="/form" element={<FormView />} />
+          <Route path="/parent" element={<ParentFormView />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
